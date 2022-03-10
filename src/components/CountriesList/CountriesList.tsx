@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useQuery, gql } from "@apollo/client";
 import Country from "../Contry/Country";
-import FilterBar from "../FilterBar/FilterBar";
+import SearchContinentName from "../SearchContinentName/SearchContinentName";
 import ClipLoader from "react-spinners/ClipLoader";
 import styled from "styled-components";
 import SearchCountryName from "../SearchCountryName/SearchCountryName";
@@ -34,19 +34,15 @@ type Continent = {
 
 const CountriesList: React.FC = () => {
   const { loading, error, data } = useQuery<Countries>(LIST_COUNTRIES);
-  const [continent, setContinent] = useState<string>("");
+  const [continentName, setContinentName] = useState<string>("");
   const [countryName, setCountryName] = useState<string>("");
 
   if (error) new Error(error.message);
 
-  const handleContinentFilter = (continent: string) => {
-    setContinent(continent);
-  };
-
   const renderCountries = () => {
     return data?.countries
       ?.filter((country) =>
-        continent ? country.continent.name === continent : true
+        continentName ? country.continent.name === continentName : true
       )
       .filter((country) =>
         countryName
@@ -61,7 +57,7 @@ const CountriesList: React.FC = () => {
   return (
     <MainWrapper>
       <SelectBarWrapper>
-        <FilterBar handleContinentFilter={handleContinentFilter} />
+        <SearchContinentName setContinentName={setContinentName} />
       </SelectBarWrapper>
       <SearchCountryName setCountryName={setCountryName} />
       <CountriesWrapper>

@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, Dispatch, SetStateAction } from "react";
 import Select from "react-select";
 import { useQuery, gql } from "@apollo/client";
-import { isCompositeType } from "graphql";
 
 const LIST_CONTINENTS = gql`
   {
@@ -12,7 +11,7 @@ const LIST_CONTINENTS = gql`
 `;
 
 type Props = {
-  handleContinentFilter: (continent: string) => void;
+  setContinentName: Dispatch<SetStateAction<string>>;
 };
 
 type Continents = {
@@ -28,7 +27,7 @@ type Options = {
   label: string;
 };
 
-const FilterBar: React.FC<Props> = ({ handleContinentFilter }) => {
+const FilterBar: React.FC<Props> = ({ setContinentName }) => {
   const { loading, error, data } = useQuery<Continents>(LIST_CONTINENTS);
   const [options, setOptions] = useState<Options[]>();
 
@@ -44,7 +43,7 @@ const FilterBar: React.FC<Props> = ({ handleContinentFilter }) => {
     <Select
       options={options}
       onChange={(e) =>
-        e ? handleContinentFilter(e?.value) : handleContinentFilter("")
+        e ? setContinentName(e?.value) : setContinentName("")
       }
       isClearable
     />
